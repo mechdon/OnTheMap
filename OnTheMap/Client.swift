@@ -40,25 +40,26 @@ class Client : NSObject {
             }
             
             Client.parseJSONWithCompletionHandler(data, completionHandler: { (result, error) in
+                
                 if error != nil {
                     completionHandler(success: false, error: "JSON Parsing Error")
                     return
                 } else {
+                    if var logerror: NSString = result["error"] as? NSString {
+                        var error = logerror as String
+                        completionHandler(success: false, error: error)
+                } else{
                         if let sessionData = result["account"] as? NSDictionary {
                             self.sessionID = sessionData["key"]
                             self.uniqueKey = self.sessionID as! String
                             NSUserDefaults.standardUserDefaults().setObject(self.uniqueKey, forKey: "uniqueKey")
                             completionHandler(success: true, error: nil)
-                        if var logerror: NSString = result["error"] as? NSString {
-                            var error = logerror as String
-                            completionHandler(success: false, error: error)
-                        }
                     }
+                }
                 }
             })
             self.getUserData()
         }
-        
         task.resume()
     }
     

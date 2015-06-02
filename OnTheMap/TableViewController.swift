@@ -21,13 +21,6 @@ class TableViewController:UITableViewController, UITableViewDataSource, UITableV
     var mediaURL = ""
     let loginManager = FBSDKLoginManager()
     
-    var sharedModel: AppDelegate {
-        get {
-            var object = UIApplication.sharedApplication().delegate as! AppDelegate
-            return object
-        }
-    }
-    
     // Progammatically set Navigation Bar Button Items
     override func viewDidLoad() {
         showActivityIndicator()
