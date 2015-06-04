@@ -19,6 +19,9 @@ class Client : NSObject {
     var userID: AnyObject? = nil
     var uniqueKey: String = ""
     
+    /* Declare variables */
+    var errorMsg: String = ""
+    
     override init() {
      session = NSURLSession.sharedSession()
         super.init()
@@ -35,7 +38,8 @@ class Client : NSObject {
         request.HTTPBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
-                completionHandler(success: false, error: "Unable to create a session with the Udacity Server")
+                self.errorMsg = error.localizedDescription
+                completionHandler(success: false, error: self.errorMsg)
                 return
             }
             
@@ -105,7 +109,7 @@ class Client : NSObject {
         }
 
    // Get Locations of the Users
-   func getStudentLocations(completionHandler: (result: [[String : AnyObject]], error: String?) -> Void) {
+    func getStudentLocations(completionHandler: (result: [[String : AnyObject]], error: String?) -> Void) {
         
         let request = NSMutableURLRequest(URL: NSURL(string: "https://api.parse.com/1/classes/StudentLocation?limit=100")!)
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
@@ -113,7 +117,10 @@ class Client : NSObject {
         
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
-                return
+                self.errorMsg = error.localizedDescription
+                let params: [String : AnyObject] = ["a" : NSNull(), "b" : NSNull()]
+                completionHandler(result: [params], error: self.errorMsg)
+            return
             }
             let parsedResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: nil ) as! [String : AnyObject]
             if let results = parsedResult["results"] as? [[String : AnyObject]] {
@@ -143,8 +150,6 @@ class Client : NSObject {
         task.resume()
     }
     
-    
-    
     // MARK: - Shared Instance
     
     class func sharedInstance() -> Client {
@@ -155,8 +160,5 @@ class Client : NSObject {
         
         return Singleton.sharedInstance
     }
-
-    
-    
     
 }

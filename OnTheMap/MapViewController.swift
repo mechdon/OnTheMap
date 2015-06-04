@@ -14,9 +14,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // Outlet for MapView
     @IBOutlet weak var map: MKMapView!
     
-    // Activity Indicator Declaration
-    var activityIndicator: UIActivityIndicatorView!
-    
     // Declare variables
     var students: [StudentInfo] = [StudentInfo]()
     var firstName = ""
@@ -28,7 +25,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     // Progammatically set Navigation Bar Button Items
     override func viewDidLoad() {
-        showActivityIndicator()
+        IndicatorView.shared.showActivityIndicator(view)
         var rightRefreshButtonItem:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: "refresh:")
         var rightLocateButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "location"), style: UIBarButtonItemStyle.Plain, target: self, action: "locate:")
         self.navigationItem.setRightBarButtonItems([rightRefreshButtonItem, rightLocateButtonItem], animated: true)
@@ -43,20 +40,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
         }
         }
-    
-    //# MARK: - Functions for showing and hiding activity indicator
-    func showActivityIndicator(){
-        let screenWidth = self.view.frame.size.width
-        let screenHeight = self.view.frame.size.height
-        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-        activityIndicator.frame = CGRectMake((screenWidth/2 - 50), (screenHeight/2 - 50), 100, 100);
-        activityIndicator.startAnimating()
-        self.view.addSubview( activityIndicator )
-    }
-    
-    func hideActivityIndicator(){
-        activityIndicator.stopAnimating()
-    }
     
     // Function for adding annotations to Map
     func addAnnotationsToMap() {
@@ -94,7 +77,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         map.addAnnotations(annotations)
         dispatch_async(dispatch_get_main_queue()) {
             self.map.showAnnotations(annotations, animated: true)
-            self.hideActivityIndicator()
+            IndicatorView.shared.hideActivityIndicator()
         }
 
     }
@@ -137,7 +120,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         NSOperationQueue.mainQueue().addOperationWithBlock{ var alert = UIAlertController(title: title, message: errormsg, preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
-                self.dismissViewControllerAnimated(true, completion: nil)
             }))
             self.presentViewController(alert, animated: true, completion: nil)
         }

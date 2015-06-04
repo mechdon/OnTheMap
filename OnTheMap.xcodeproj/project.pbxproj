@@ -30,6 +30,7 @@
 		95E479951B0DDDDA00FF3166 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E479941B0DDDDA00FF3166 /* MapViewController.swift */; };
 		95E4799B1B0DDFA600FF3166 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95E479991B0DDFA600FF3166 /* Bolts.framework */; };
 		95E4799C1B0DDFA600FF3166 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95E4799A1B0DDFA600FF3166 /* Parse.framework */; };
+		95FB82D31B1EE0FF00CFF5CE /* IndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FB82D21B1EE0FF00CFF5CE /* IndicatorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +72,7 @@
 		95E479961B0DDF6B00FF3166 /* OnTheMap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OnTheMap-Bridging-Header.h"; sourceTree = "<group>"; };
 		95E479991B0DDFA600FF3166 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		95E4799A1B0DDFA600FF3166 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		95FB82D21B1EE0FF00CFF5CE /* IndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndicatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +148,7 @@
 			children = (
 				95E479681B0DDA0900FF3166 /* AppDelegate.swift */,
 				9563DC3F1B16F47B00175004 /* Reachability.swift */,
+				95FB82D11B1ED7DC00CFF5CE /* View */,
 				9563DC421B17575800175004 /* Clients */,
 				9563DC411B1756AF00175004 /* ViewControllers */,
 				95E479881B0DDA9700FF3166 /* Main.storyboard */,
@@ -185,6 +188,14 @@
 				95E4797D1B0DDA0900FF3166 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		95FB82D11B1ED7DC00CFF5CE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				95FB82D21B1EE0FF00CFF5CE /* IndicatorView.swift */,
+			);
+			name = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -296,6 +307,7 @@
 				95E4796B1B0DDA0900FF3166 /* LoginViewController.swift in Sources */,
 				957939BF1B101E33008A46E7 /* StudentInfo.swift in Sources */,
 				95E479951B0DDDDA00FF3166 /* MapViewController.swift in Sources */,
+				95FB82D31B1EE0FF00CFF5CE /* IndicatorView.swift in Sources */,
 				95E479691B0DDA0900FF3166 /* AppDelegate.swift in Sources */,
 				9545119F1B146A6400FA99FB /* InfoPostViewController.swift in Sources */,
 				951356201B1835C200198435 /* Client.swift in Sources */,

@@ -11,9 +11,6 @@ import MapKit
 
 class InfoPostViewController: UIViewController, UITextFieldDelegate, MKMapViewDelegate {
     
-    // Activity Indicator Declaration
-    var activityIndicator: UIActivityIndicatorView!
-
     // View component outlets
     @IBOutlet weak var urlInfoPostTF: UITextField!
     @IBOutlet weak var mapviewInfoPost: MKMapView!
@@ -34,6 +31,7 @@ class InfoPostViewController: UIViewController, UITextFieldDelegate, MKMapViewDe
     var region: MKCoordinateRegion!
     var latitude: AnyObject?
     var longitude: AnyObject?
+    var errorMsg: String = ""
     
     // Set right bar button item and initialte view
     override func viewDidLoad() {
@@ -65,20 +63,6 @@ class InfoPostViewController: UIViewController, UITextFieldDelegate, MKMapViewDe
         super.didReceiveMemoryWarning()
     }
     
-    //# MARK: - Functions for showing and hiding activity indicator
-    func showActivityIndicator(){
-        let screenWidth = self.view.frame.size.width
-        let screenHeight = self.view.frame.size.height
-        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-        activityIndicator.frame = CGRectMake((screenWidth/2 - 50), (screenHeight/2 - 50), 100, 100);
-        activityIndicator.startAnimating()
-        self.view.addSubview( activityIndicator )
-    }
-    
-    func hideActivityIndicator(){
-        activityIndicator.stopAnimating()
-    }
-
     // Find location button pressed
     @IBAction func findonMapButton(sender: AnyObject) {
         mapString = infoPostTF.text
@@ -89,11 +73,16 @@ class InfoPostViewController: UIViewController, UITextFieldDelegate, MKMapViewDe
             return
         } else {
             // Forward geocode the mapString
+            
+            IndicatorView.shared.showActivityIndicator(view)
             var geocoder = CLGeocoder()
             geocoder.geocodeAddressString(mapString, completionHandler: {(placemarks: [AnyObject]!, error: NSError!) -> Void in
                 if error != nil {
+                    var errorMsg = error.localizedDescription
+                    
                     // Show Error Alert if invalid location is entered
-                    self.showAlertMsg("Invalid Location", errorMsg: "Please enter a valid location")
+                    self.showAlertMsg("GeoCoding Error", errorMsg: errorMsg)
+                    IndicatorView.shared.hideActivityIndicator()
                     return
                 } else {
                     // Switch view
@@ -113,6 +102,7 @@ class InfoPostViewController: UIViewController, UITextFieldDelegate, MKMapViewDe
                     let span = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
                     self.region = MKCoordinateRegion(center: coordinate, span: span)
                     self.mapviewInfoPost.setRegion(self.region!, animated: true)
+                    IndicatorView.shared.hideActivityIndicator()
                 }
             })
         }
@@ -140,13 +130,13 @@ class InfoPostViewController: UIViewController, UITextFieldDelegate, MKMapViewDe
             lat = self.latitude!.stringValue
             lon = self.longitude!.stringValue
             
-            self.showActivityIndicator()
+            IndicatorView.shared.showActivityIndicator(view)
             
             Client.sharedInstance().postUserLocation(uniqueKey, firstName: firstName, lastName: lastName, mapString: mapString, mediaURL: mediaURL, lat: lat, lon: lon, completionHandler: { (success, error) in
                 if success {
                     dispatch_async(dispatch_get_main_queue()) {
                         self.cancel()
-                        self.hideActivityIndicator()
+                        IndicatorView.shared.hideActivityIndicator()
                     }
                 } else {
                     self.showAlertMsg("Post Error", errorMsg: error)

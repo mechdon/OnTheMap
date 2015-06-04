@@ -10,9 +10,6 @@ import UIKit
 
 class TableViewController:UITableViewController, UITableViewDataSource, UITableViewDelegate {
     
-    // Activity Indicator Declaration
-    var activityIndicator: UIActivityIndicatorView!
-    
     // Declare variables
     var studentNamesTableView: UITableView!
     var students: [StudentInfo] = [StudentInfo]()
@@ -23,7 +20,7 @@ class TableViewController:UITableViewController, UITableViewDataSource, UITableV
     
     // Progammatically set Navigation Bar Button Items
     override func viewDidLoad() {
-        showActivityIndicator()
+        IndicatorView.shared.showActivityIndicator(view)
         var rightRefreshButtonItem:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: "refresh:")
         var rightLocateButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "location"), style: UIBarButtonItemStyle.Plain, target: self, action: "locate:")
         self.navigationItem.setRightBarButtonItems([rightRefreshButtonItem, rightLocateButtonItem], animated: true)
@@ -31,11 +28,12 @@ class TableViewController:UITableViewController, UITableViewDataSource, UITableV
         Client.sharedInstance().getStudentLocations() {(students, error) in
             if error != nil {
                 self.showAlertMsg("Download Error", errorMsg: error!)
+                IndicatorView.shared.hideActivityIndicator()
             } else {
                 self.students = StudentInfo.studentsInfoResults(students)
                 dispatch_async(dispatch_get_main_queue()) {
                     self.tableView.reloadData()
-                    self.hideActivityIndicator()
+                    IndicatorView.shared.hideActivityIndicator()
                 }
             }
         }
@@ -46,22 +44,7 @@ class TableViewController:UITableViewController, UITableViewDataSource, UITableV
         self.studentNamesTableView = self.view.viewWithTag(1) as! UITableView
         self.studentNamesTableView.reloadData()
     }
-    
-    //# MARK: - Functions for showing and hiding activity indicator
-    func showActivityIndicator(){
-        let screenWidth = self.view.frame.size.width
-        let screenHeight = self.view.frame.size.height
-        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-        activityIndicator.frame = CGRectMake((screenWidth/2 - 50), (screenHeight/2 - 50), 100, 100);
-        activityIndicator.startAnimating()
-        self.view.addSubview( activityIndicator )
-    }
-    
-    func hideActivityIndicator(){
-        activityIndicator.stopAnimating()
-    }
-
-    
+        
     // Function to show Alert Message
     func showAlertMsg(errorTitle: String, errorMsg: String) {
         var title = errorTitle
@@ -69,7 +52,6 @@ class TableViewController:UITableViewController, UITableViewDataSource, UITableV
         
         NSOperationQueue.mainQueue().addOperationWithBlock{ var alert = UIAlertController(title: title, message: errormsg, preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
-                self.dismissViewControllerAnimated(true, completion: nil)
             }))
             self.presentViewController(alert, animated: true, completion: nil)
         }
@@ -124,6 +106,7 @@ class TableViewController:UITableViewController, UITableViewDataSource, UITableV
     
     // Refresh Table
     func refresh(sender: UIBarButtonItem){
+        IndicatorView.shared.showActivityIndicator(view)
         Client.sharedInstance().getStudentLocations() {(students, error) in
             if error != nil {
                 self.showAlertMsg("Parsing Error", errorMsg: error!)
@@ -131,6 +114,7 @@ class TableViewController:UITableViewController, UITableViewDataSource, UITableV
                 self.students = StudentInfo.studentsInfoResults(students)
                 dispatch_async(dispatch_get_main_queue()) {
                     self.tableView.reloadData()
+                    IndicatorView.shared.hideActivityIndicator()
                 }
             }
         }
