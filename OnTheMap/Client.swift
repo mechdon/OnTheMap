@@ -38,12 +38,12 @@ class Client : NSObject {
         request.HTTPBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}".dataUsingEncoding(NSUTF8StringEncoding)
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
-                self.errorMsg = error.localizedDescription
+                self.errorMsg = error!.localizedDescription
                 completionHandler(success: false, error: self.errorMsg)
                 return
             }
             
-            Client.parseJSONWithCompletionHandler(data, completionHandler: { (result, error) in
+            Client.parseJSONWithCompletionHandler(data!, completionHandler: { (result, error) in
                 
                 if error != nil {
                     completionHandler(success: false, error: "JSON Parsing Error")
@@ -76,7 +76,7 @@ class Client : NSObject {
             return
             }
             
-            Client.parseJSONWithCompletionHandler(data, completionHandler: { (result, error) in
+            Client.parseJSONWithCompletionHandler(data!, completionHandler: { (result, error) in
                 if error != nil {
                     return
                 } else {
@@ -97,9 +97,9 @@ class Client : NSObject {
         {
             let newData = data.subdataWithRange(NSMakeRange(5, data.length - 5))
 
-            var parsingError: NSError? = nil
+            let parsingError: NSError? = nil
             
-            let jsonDict = NSJSONSerialization.JSONObjectWithData(newData, options: nil, error: &parsingError) as! NSDictionary
+            let jsonDict = (try! NSJSONSerialization.JSONObjectWithData(newData, options: [])) as! NSDictionary
     
             if let error = parsingError {
                 completionHandler(result: nil, error: error)
@@ -117,12 +117,12 @@ class Client : NSObject {
         
         let task = session.dataTaskWithRequest(request) { data, response, error in
             if error != nil {
-                self.errorMsg = error.localizedDescription
+                self.errorMsg = error!.localizedDescription
                 let params: [String : AnyObject] = ["a" : NSNull(), "b" : NSNull()]
                 completionHandler(result: [params], error: self.errorMsg)
             return
             }
-            let parsedResult = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments, error: nil ) as! [String : AnyObject]
+            let parsedResult = (try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments)) as! [String : AnyObject]
             if let results = parsedResult["results"] as? [[String : AnyObject]] {
                 completionHandler(result: results, error: nil)
             }

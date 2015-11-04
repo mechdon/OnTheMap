@@ -26,8 +26,8 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     // Progammatically set Navigation Bar Button Items
     override func viewDidLoad() {
         IndicatorView.shared.showActivityIndicator(view)
-        var rightRefreshButtonItem:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: "refresh:")
-        var rightLocateButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "location"), style: UIBarButtonItemStyle.Plain, target: self, action: "locate:")
+        let rightRefreshButtonItem:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: "refresh:")
+        let rightLocateButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "location"), style: UIBarButtonItemStyle.Plain, target: self, action: "locate:")
         self.navigationItem.setRightBarButtonItems([rightRefreshButtonItem, rightLocateButtonItem], animated: true)
         
         // Get student locations and add annotations to map
@@ -64,10 +64,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 mediaURL = students[i].mediaURL!
             }
             
-            var latitude:CLLocationDegrees = lat
-            var longitude:CLLocationDegrees = lon
-            var location:CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
-            var annotation = MKPointAnnotation()
+            let latitude:CLLocationDegrees = lat
+            let longitude:CLLocationDegrees = lon
+            let location:CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longitude)
+            let annotation = MKPointAnnotation()
             annotation.coordinate = location
             annotation.title = "\(firstName) \(lastName)"
             annotation.subtitle = mediaURL
@@ -84,10 +84,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     //# MARK: - MapView functions
     
-    func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    func mapView(mapView: MKMapView, viewForAnnotation annotation: MKAnnotation) -> MKAnnotationView? {
         
         // Set Callout
-        if let annotation = annotation {
+       
             let identifier = "pin"
             var view: MKPinAnnotationView
             if let dequeuedView = self.map.dequeueReusableAnnotationViewWithIdentifier(identifier) as? MKPinAnnotationView {
@@ -97,28 +97,27 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
                 view.canShowCallout = true
                 view.calloutOffset = CGPoint(x: -5, y: 5)
-                view.rightCalloutAccessoryView = UIButton.buttonWithType(UIButtonType.InfoLight) as! UIView
+                view.rightCalloutAccessoryView = UIButton(type: UIButtonType.InfoLight) as UIView
             }
             return view
         }
-        return nil
-    }
+   
     
     // Attempt to launch URL when callout is tapped
-    func mapView(mapView: MKMapView!, annotationView view: MKAnnotationView!, calloutAccessoryControlTapped control: UIControl!) {
-        if let url = view.annotation.subtitle {
+    func mapView(mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+       /* if let url = view.annotation.subtitle {
             UIApplication.sharedApplication().openURL(NSURL(string: url!)!)
         } else {
             showAlertMsg("Error", errorMsg: "Could not find a URL to launch")
-        }
+        }*/
     }
     
     // Function to show Alert Message
     func showAlertMsg(errorTitle: String, errorMsg: String) {
-        var title = errorTitle
-        var errormsg = errorMsg
+        let title = errorTitle
+        let errormsg = errorMsg
         
-        NSOperationQueue.mainQueue().addOperationWithBlock{ var alert = UIAlertController(title: title, message: errormsg, preferredStyle: UIAlertControllerStyle.Alert)
+        NSOperationQueue.mainQueue().addOperationWithBlock{ let alert = UIAlertController(title: title, message: errormsg, preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
             }))
             self.presentViewController(alert, animated: true, completion: nil)

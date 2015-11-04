@@ -48,10 +48,10 @@ class InfoPostViewController: UIViewController, UITextFieldDelegate, MKMapViewDe
     
     // Function to show Alert Message
     func showAlertMsg(errorTitle: String, errorMsg: String) {
-        var title = errorTitle
-        var errormsg = errorMsg
+        let title = errorTitle
+        let errormsg = errorMsg
         
-        NSOperationQueue.mainQueue().addOperationWithBlock{ var alert = UIAlertController(title: title, message: errormsg, preferredStyle: UIAlertControllerStyle.Alert)
+        NSOperationQueue.mainQueue().addOperationWithBlock{ let alert = UIAlertController(title: title, message: errormsg, preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
                 // No further action apart from dismissing this alert
             }))
@@ -65,7 +65,7 @@ class InfoPostViewController: UIViewController, UITextFieldDelegate, MKMapViewDe
     
     // Find location button pressed
     @IBAction func findonMapButton(sender: AnyObject) {
-        mapString = infoPostTF.text
+        mapString = infoPostTF.text!
         
         // Prompt user to enter location if field is empty
         if infoPostTF.text == "" {
@@ -76,9 +76,9 @@ class InfoPostViewController: UIViewController, UITextFieldDelegate, MKMapViewDe
             
             IndicatorView.shared.showActivityIndicator(view)
             var geocoder = CLGeocoder()
-            geocoder.geocodeAddressString(mapString, completionHandler: {(placemarks: [AnyObject]!, error: NSError!) -> Void in
+            geocoder.geocodeAddressString(mapString, completionHandler: {(placemarks: [CLPlacemark]?, error: NSError?) -> Void in
                 if error != nil {
-                    var errorMsg = error.localizedDescription
+                    var errorMsg = error!.localizedDescription
                     
                     // Show Error Alert if invalid location is entered
                     self.showAlertMsg("GeoCoding Error", errorMsg: errorMsg)
@@ -94,11 +94,11 @@ class InfoPostViewController: UIViewController, UITextFieldDelegate, MKMapViewDe
                     self.infoFindButton.hidden = true
                 }
                 
-                if let placemark = placemarks[0] as? CLPlacemark {
+                if let placemark = placemarks![0] as? CLPlacemark {
                     self.mapviewInfoPost.addAnnotation(MKPlacemark(placemark: placemark))
-                    let coordinate = placemark.location.coordinate
-                    self.latitude = placemark.location.coordinate.latitude
-                    self.longitude = placemark.location.coordinate.longitude
+                    let coordinate = placemark.location!.coordinate
+                    self.latitude = placemark.location!.coordinate.latitude
+                    self.longitude = placemark.location!.coordinate.longitude
                     let span = MKCoordinateSpan(latitudeDelta: 0.5, longitudeDelta: 0.5)
                     self.region = MKCoordinateRegion(center: coordinate, span: span)
                     self.mapviewInfoPost.setRegion(self.region!, animated: true)
@@ -117,7 +117,7 @@ class InfoPostViewController: UIViewController, UITextFieldDelegate, MKMapViewDe
     // Submit button pressed
     @IBAction func submitButton(sender: AnyObject) {
         
-        mediaURL = urlInfoPostTF.text
+        mediaURL = urlInfoPostTF.text!
         
         if mediaURL == "" {
             showAlertMsg("MediaURL Empty", errorMsg: "Please enter your URL")

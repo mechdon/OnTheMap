@@ -62,8 +62,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
         showAlertMsg("Connection Error", errorMsg: "Unable to connect to the internet. Please check your connection")
         }
         
-        var username:String = userEmail.text
-        var password:String = userPassword.text
+        let username:String = userEmail.text!
+        let password:String = userPassword.text!
         
         // Prompt user to enter email if emailUsername field is empty
         if username.isEmpty {
@@ -94,10 +94,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
     
     // Show Alert Method
     func showAlertMsg(errorTitle: String, errorMsg: String) {
-        var title = errorTitle
-        var errormsg = errorMsg
+        let title = errorTitle
+        let errormsg = errorMsg
         
-        NSOperationQueue.mainQueue().addOperationWithBlock{ var alert = UIAlertController(title: title, message: errormsg, preferredStyle: UIAlertControllerStyle.Alert)
+        NSOperationQueue.mainQueue().addOperationWithBlock{ let alert = UIAlertController(title: title, message: errormsg, preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
                 self.dismissViewControllerAnimated(true, completion: nil)
             }))
@@ -149,6 +149,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate, FBSDKLoginButt
             }
             else
             {
+                
+                print(result)
                 let firstName: String = result.valueForKey("first_name") as! String
                 let lastName: String = result.valueForKey("last_name") as! String
                 let uniqueKey: String = result.valueForKey("id") as! String

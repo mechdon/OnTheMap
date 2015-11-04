@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TableViewController:UITableViewController, UITableViewDataSource, UITableViewDelegate {
+class TableViewController:UITableViewController {
     
     // Declare variables
     var studentNamesTableView: UITableView!
@@ -21,8 +21,8 @@ class TableViewController:UITableViewController, UITableViewDataSource, UITableV
     // Progammatically set Navigation Bar Button Items
     override func viewDidLoad() {
         IndicatorView.shared.showActivityIndicator(view)
-        var rightRefreshButtonItem:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: "refresh:")
-        var rightLocateButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "location"), style: UIBarButtonItemStyle.Plain, target: self, action: "locate:")
+        let rightRefreshButtonItem:UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Refresh, target: self, action: "refresh:")
+        let rightLocateButtonItem:UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "location"), style: UIBarButtonItemStyle.Plain, target: self, action: "locate:")
         self.navigationItem.setRightBarButtonItems([rightRefreshButtonItem, rightLocateButtonItem], animated: true)
         
         Client.sharedInstance().getStudentLocations() {(students, error) in
@@ -47,10 +47,10 @@ class TableViewController:UITableViewController, UITableViewDataSource, UITableV
         
     // Function to show Alert Message
     func showAlertMsg(errorTitle: String, errorMsg: String) {
-        var title = errorTitle
-        var errormsg = errorMsg
+        let title = errorTitle
+        let errormsg = errorMsg
         
-        NSOperationQueue.mainQueue().addOperationWithBlock{ var alert = UIAlertController(title: title, message: errormsg, preferredStyle: UIAlertControllerStyle.Alert)
+        NSOperationQueue.mainQueue().addOperationWithBlock{ let alert = UIAlertController(title: title, message: errormsg, preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "Ok", style: .Default, handler: { action in
             }))
             self.presentViewController(alert, animated: true, completion: nil)
@@ -73,7 +73,7 @@ class TableViewController:UITableViewController, UITableViewDataSource, UITableV
     // Populate rows with each student's firstname and lastname
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("customCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("customCell", forIndexPath: indexPath) 
         let student: StudentInfo = students[indexPath.row] as StudentInfo
         if student.firstName != nil {
             firstName = student.firstName!
@@ -83,10 +83,10 @@ class TableViewController:UITableViewController, UITableViewDataSource, UITableV
             lastName = student.lastName!
         }
         
-        var studentname = firstName + " " + lastName
-        var studentNameLabel: UILabel = cell.contentView.viewWithTag(101) as! UILabel
+        let studentname = firstName + " " + lastName
+        let studentNameLabel: UILabel = cell.contentView.viewWithTag(101) as! UILabel
         studentNameLabel.text = studentname
-        var cellImageView: UIImageView = cell.contentView.viewWithTag(100) as! UIImageView
+        let cellImageView: UIImageView = cell.contentView.viewWithTag(100) as! UIImageView
         cellImageView.image = UIImage(named: "location")
         return cell
     }
